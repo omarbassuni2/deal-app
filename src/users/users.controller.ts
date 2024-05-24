@@ -8,7 +8,6 @@ import {
 } from 'src/authorization/authorization.guard';
 
 @Controller('users')
-@UseGuards(AuthorizationGuard)
 export class UsersController {
   constructor(private userService: UsersService) {}
   @Public()
@@ -23,6 +22,7 @@ export class UsersController {
     return this.userService.signIn(user.phone, user.password);
   }
 
+  @UseGuards(AuthorizationGuard)
   @Roles(RoleEnum.ADMIN)
   @Get('/stats')
   getUserStats() {

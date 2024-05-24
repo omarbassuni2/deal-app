@@ -13,7 +13,6 @@ import { AuthorizationGuard } from './authorization/authorization.guard';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>(ENV_CONSTANTS.DB_URI),
         dbName: configService.get<string>(ENV_CONSTANTS.DB_NAME),

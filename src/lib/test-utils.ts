@@ -15,7 +15,7 @@ export class TestUtils {
         uri: configService.get<string>(ENV_CONSTANTS.DB_URI),
         dbName: `deal-app-test-${dbName}`,
         connectionFactory: (connection: Connection) => {
-          connection.db.dropDatabase(); // Drop all collections before establishing the connection, to ensure each
+          connection.db.dropDatabase(); // Drop all collections before establishing the connection, to ensure db isolation
           return connection;
         },
       }),
@@ -28,7 +28,7 @@ export class TestUtils {
       useFactory: (configService: ConfigService) => ({
         global: true,
         secret: configService.get<string>(ENV_CONSTANTS.JWT_SECRET),
-        signOptions: { expiresIn: '1y' },
+        signOptions: { expiresIn: '120s' },
       }),
       inject: [ConfigService],
     });
