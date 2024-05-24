@@ -11,6 +11,8 @@ export class User {
   name: string;
 
   @Prop({
+    minlength: '3',
+    maxlength: 64,
     required: true,
     set: function (password: string) {
       return bcrypt.hashSync(password, bcrypt.genSaltSync(10));

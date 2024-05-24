@@ -22,7 +22,7 @@ export class Property {
   @Prop({ required: true, minlength: 1, maxlength: 1024 })
   description: string;
 
-  @Prop({ default: new Date() }) // TO-DO: this is a milli seconds earlier than createdAt. make it equal to createdAt
+  @Prop({ default: Date.now })
   refreshedAt: Date;
 
   @Prop({ type: Types.ObjectId, ref: 'User', index: true })
