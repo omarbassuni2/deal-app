@@ -1,0 +1,76 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { AdsService } from './ads.service';
+import { TestUtils } from 'src/lib/test-utils';
+import { Ad, AdSchema } from './schemas/ads.schema';
+import {
+  stubUserObjectId,
+  stubPropertyCreation,
+} from 'src/lib/stubs/property.stub';
+import { getQueryWithRespectToAdmin } from 'src/lib/utility';
+import { stubAdmin, stubClient } from 'src/lib/stubs/request-roles.stub';
+
+describe('AdsService', () => {
+  let service: AdsService;
+  let module: TestingModule;
+  beforeAll(async () => {
+    module = await Test.createTestingModule({
+      imports: [
+        TestUtils.getTestConfigModule(),
+        TestUtils.getTestMongooseModule('ads-service'),
+        TestUtils.getTestMongooseSchemas([{ name: Ad.name, schema: AdSchema }]),
+      ],
+      providers: [AdsService],
+    }).compile();
+
+    service = module.get<AdsService>(AdsService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+  describe('When testing ad creation', () => {
+    it('Should create an ad', async () => {
+      const response = await service.createAd(
+        stubPropertyCreation(),
+        stubUserObjectId(),
+      );
+      expect(response).toMatchObject(stubPropertyCreation());
+    });
+
+    it('Should throw validation errors', async () => {
+      await expect(
+        service.createAd({} as any, stubUserObjectId()),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Ad validation failed: description: Path \`description\` is required., district: Path \`district\` is required., city: Path \`city\` is required., price: Path \`price\` is required., area: Path \`area\` is required., propertyType: Path \`propertyType\` is required."`,
+      );
+    });
+  });
+
+  describe('when testing ad retrievals', () => {
+    let _id: string;
+    it('Should return all documents', async () => {
+      const response = await service.getAds(
+        getQueryWithRespectToAdmin(stubAdmin()),
+      );
+      expect(response.length).toBeGreaterThan(0);
+      _id = response[0]._id.toString();
+    });
+    it('Should return a single documents', async () => {
+      const response = await service.getSingleAdd({
+        ...getQueryWithRespectToAdmin(stubAdmin()),
+        _id,
+      });
+      expect(response).toBeDefined();
+    });
+    it('Should not return anything', async () => {
+      const response = await service.getAds(
+        getQueryWithRespectToAdmin(stubClient()),
+      );
+      expect(response.length).toBe(0);
+    });
+  });
+});

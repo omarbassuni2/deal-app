@@ -22,6 +22,8 @@ export class AuthorizationGuard implements CanActivate {
       return true;
     }
     const { user } = context.switchToHttp().getRequest();
-    return requiredRoles.some((role) => role === user.role);
+    return requiredRoles.some(
+      (role) => role === user.role || user.role === RoleEnum.ADMIN,
+    );
   }
 }
