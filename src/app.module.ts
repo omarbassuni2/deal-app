@@ -8,6 +8,8 @@ import { ENV_CONSTANTS } from './lib/constant';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthorizationGuard } from './authorization/authorization.guard';
+import { AdsModule } from './ads/ads.module';
+import { RequestsModule } from './requests/requests.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { AuthorizationGuard } from './authorization/authorization.guard';
     UsersModule,
     AuthenticationModule,
     AuthorizationGuard,
+    AdsModule,
+    RequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

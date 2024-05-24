@@ -54,3 +54,5 @@ export class AuthenticationGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 }
+
+// - Implement authentication using JWT tokens.

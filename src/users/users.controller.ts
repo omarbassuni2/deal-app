@@ -19,6 +19,7 @@ export class UsersController {
   @Public()
   @Post('/signin')
   signIn(@Body() user: UserLoginDto) {
+    // - Implement endpoint for login using phone and password `(password must be secured)`
     return this.userService.signIn(user.phone, user.password);
   }
 

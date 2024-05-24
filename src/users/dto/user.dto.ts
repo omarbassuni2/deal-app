@@ -1,4 +1,4 @@
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsString, Length } from 'class-validator';
 import { User } from '../schemas/user.schema';
 export enum RoleEnum {
   ADMIN = 'ADMIN',
@@ -18,6 +18,7 @@ export class UserSignUpDto {
   @IsString()
   password: string;
 
+  @Length(11, 11)
   @IsString()
   phone: string;
 
