@@ -22,10 +22,10 @@ export class RequestsService {
       runValidators: true,
     });
   }
-  async getRequests(query: { userId?: Types.ObjectId }) {
-    return this.requestsModel.find(query);
+  async getRequests() {
+    return this.requestsModel.find();
   }
-  async getSingleRequest(query: { _id: string; userId?: Types.ObjectId }) {
+  async getSingleRequest(query: { _id: string }) {
     return this.requestsModel.find(query);
   }
 }

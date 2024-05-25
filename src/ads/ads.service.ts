@@ -11,11 +11,11 @@ export class AdsService {
     return this.adsModel.create({ ...data, userId });
   }
 
-  getSingleAdd(query: { _id: string; userId?: Types.ObjectId }) {
+  getSingleAdd(query: { _id: string }) {
     return this.adsModel.findOne(query);
   }
 
-  getAds(query: { userId?: Types.ObjectId }) {
-    return this.adsModel.find(query);
+  getAds() {
+    return this.adsModel.find();
   }
 }
