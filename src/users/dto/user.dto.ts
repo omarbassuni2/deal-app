@@ -10,13 +10,9 @@ export enum StatusEnum {
   ACTIVE = 'ACTIVE',
   DELETED = 'DELETED',
 }
-
-export class UserSignUpDto {
+export class UserDto {
   @IsString()
   name: string;
-
-  @IsString()
-  password: string;
 
   @Length(11, 11)
   @IsString()
@@ -27,6 +23,10 @@ export class UserSignUpDto {
 
   @IsEnum(StatusEnum)
   status: StatusEnum;
+}
+export class UserSignUpDto extends UserDto {
+  @IsString()
+  password: string;
 }
 
 export class UserLoginDto {
@@ -40,4 +40,29 @@ export class UserLoginDto {
 export class UserAuthInfoDto {
   user: Omit<User, 'password'>;
   access_token: string;
+}
+
+// [{
+//     name: 'name',
+//     role: 'name',
+//     ...other user data,
+//     adsCount: 0,
+//     totalAdsAmount: 0,
+//     requestsCount: 10,
+//     totalRequestsAmount: 23600,
+// }],
+export class StatsDataDto extends UserDto {
+  adsCount: number;
+  requestsCount: number;
+}
+
+export class UserStatsDto {
+  data: StatsDataDto[];
+  totalAdsAmount: number;
+  totalRequestsAmount: number;
+  page: number;
+  limit: number;
+  total: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }
