@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  # app service for your backend
+  app:
+    container_name: backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      DB_URI: "mongodb://database:27017/"
+      DB_NAME: "deal-app"
+      JWT_SECRET: "very secret and known jwt secret"
+    ports:
+      - '3000:3000'
+    depends_on:
+      - database
+      
+  # start the mongodb service as container
+  database:
+    image: mongo:6.0.2
+    container_name: mongodb
+    restart: always
+    ports:
+      - '27017:27017'
