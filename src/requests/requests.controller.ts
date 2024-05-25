@@ -17,8 +17,10 @@ import { RoleEnum } from 'src/users/dto/user.dto';
 import { Types } from 'mongoose';
 import { RequestCreationDto, RequestUpdateDto } from './dto/requests.dto';
 import { getQueryWithRespectToAdmin } from 'src/lib/utility';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('requests')
+@ApiBearerAuth()
 export class RequestsController {
   constructor(private requestsService: RequestsService) {}
   @Post()

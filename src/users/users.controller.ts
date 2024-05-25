@@ -14,6 +14,8 @@ import {
   AuthorizationGuard,
   Roles,
 } from 'src/authorization/authorization.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { PaginationQuery } from 'src/lib/dto/pagination.dto';
 
 @Controller('users')
 export class UsersController {
@@ -32,12 +34,11 @@ export class UsersController {
   }
 
   @UseGuards(AuthorizationGuard)
+  @ApiBearerAuth()
   @Roles(RoleEnum.ADMIN)
   @Get('stats/')
-  getUserStats(@Query('page') page: string, @Query('limit') limit: string) {
-    return this.userService.getUserStats(
-      parseInt(page, 10) || 1,
-      parseInt(limit, 10) || 10,
-    );
+  getUserStats(@Query() paginationQuery: PaginationQuery) {
+    const { page, limit } = paginationQuery;
+    return this.userService.getUserStats(page, limit);
   }
 }

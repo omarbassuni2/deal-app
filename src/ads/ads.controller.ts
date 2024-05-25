@@ -16,8 +16,11 @@ import { AdCreationDto } from './dto/ads.dto';
 import { AdsService } from './ads.service';
 import { RoleEnum } from 'src/users/dto/user.dto';
 import { Types } from 'mongoose';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { PaginationQuery } from 'src/lib/dto/pagination.dto';
 
 @Controller('ads')
+@ApiBearerAuth()
 export class AdsController {
   constructor(private adsService: AdsService) {}
   @Post()
@@ -38,13 +41,9 @@ export class AdsController {
   @Get('matching/:_id')
   async getMatchingProperties(
     @Param('_id') id: string,
-    @Query('page') page: string,
-    @Query('limit') limit: string,
+    @Query() paginationQuery: PaginationQuery,
   ) {
-    return this.adsService.getMatchingProperties(
-      id,
-      parseInt(page, 10) || 1,
-      parseInt(limit, 10) || 10,
-    );
+    const { page, limit } = paginationQuery;
+    return this.adsService.getMatchingProperties(id, page, limit);
   }
 }
