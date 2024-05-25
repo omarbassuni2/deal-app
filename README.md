@@ -1,4 +1,8 @@
 ## Running the app
+## Install Mongorestore for the DB Backup restore command to work
+```
+$ Follow to this link: https://www.mongodb.com/docs/database-tools/installation/installation-linux/
+```
 ## 1. Using Docker
 
 ```bash
