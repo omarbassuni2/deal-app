@@ -11,6 +11,7 @@ import { stubAdmin, stubClient } from 'src/lib/stubs/request-roles.stub';
 import { RequestSchema } from 'src/requests/schemas/requests.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { shouldBeMatchedArr, shouldNotBeMatchedArr } from './stubs/ads.stub';
 
 describe('AdsService', () => {
   let service: AdsService;
@@ -74,44 +75,17 @@ describe('AdsService', () => {
 
   describe('when matching ids with requests', () => {
     it('Should return all documents with matching criteria', async () => {
-      const shouldBeMatchedArr = [
-        stubPropertyCreation(),
-        { ...stubPropertyCreation(), price: 90 },
-        { ...stubPropertyCreation(), price: 110 },
-        { ...stubPropertyCreation(), price: 100 },
-        { ...stubPropertyCreation(), price: 95 },
-      ];
-      const shouldNotBeMatchedArr = [
-        { ...stubPropertyCreation(), price: 1 },
-        { ...stubPropertyCreation(), price: 200000 },
-        { ...stubPropertyCreation(), price: 89 },
-        { ...stubPropertyCreation(), price: 111 },
-      ];
-      const shouldNotBeMatchedArr2 = [
-        { ...stubPropertyCreation(), district: 'district1' },
-        { ...stubPropertyCreation(), district: 'district1' },
-        { ...stubPropertyCreation(), district: 'district1' },
-        { ...stubPropertyCreation(), district: 'district1' },
-      ];
-      const shouldNotBeMatchedArr3 = [
-        { ...stubPropertyCreation(), area: 'area1' },
-        { ...stubPropertyCreation(), area: 'area1' },
-        { ...stubPropertyCreation(), area: 'area1' },
-        { ...stubPropertyCreation(), area: 'area1' },
-      ];
       await requestModel.insertMany([
-        ...shouldBeMatchedArr,
-        ...shouldNotBeMatchedArr,
-        ...shouldNotBeMatchedArr2,
-        ...shouldNotBeMatchedArr3,
+        ...shouldBeMatchedArr(),
+        ...shouldNotBeMatchedArr(),
       ]);
-      const response = await service.getMatchingProperties(_id);
-      expect(response.length).toBe(shouldBeMatchedArr.length);
+      const response = await service.getMatchingProperties(_id, 1, 10);
+      expect(response.length).toBe(shouldBeMatchedArr().length);
     });
     it('Should not return documents at all', async () => {
       // sending a user id as a dummy instead of a document id
       await expect(
-        service.getMatchingProperties(stubUserObjectId().toString()),
+        service.getMatchingProperties(stubUserObjectId().toString(), 1, 10),
       ).rejects.toThrow();
     });
   });

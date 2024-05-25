@@ -26,7 +26,7 @@ export class AdsService {
   //    - example: if ad price is 100 then requests with price 90 to 110 will be matched
   // - Include pagination in the response using MongoDB aggregation with a `single` database call.
   // - Ensure that the matching logic is efficient and can handle a large number of requests and ads (performance considerations).
-  async getMatchingProperties(_id: string, page = 1, limit = 10) {
+  async getMatchingProperties(_id: string, page: number, limit: number) {
     const ad = await this.adsModel.findById(_id);
     if (!ad) {
       throw new Error('Ad not found');
