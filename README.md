@@ -10,26 +10,26 @@ $ docker-compose up -d
 # Load database 
 $ npm run import-mongo-database
 
-$ You are now ready to create HTTP request
+$ You are now ready to create HTTP requests
 
 # Go to swagger for documentation
 $ go to swagger: http://localhost:3000/api
 
 ```
 
-## 2. Using MongoDB and NestJs
+## 2. Locally yourself
 
 ```bash
-$ Start your mongoDB instance
+$ npm i
+
+$ Start your mongoDB instance on port 27017
 
 # Load database 
 $ npm run import-mongo-database
 
-$ npm i
-
 $ npm run start
 
-$ You are now ready to create HTTP request
+$ You are now ready to create HTTP requests
 
 # Go to swagger for documentation
 $ go to swagger: http://localhost:3000/api
@@ -38,12 +38,12 @@ $ go to swagger: http://localhost:3000/api
 ## Test
 ## 1. Run tests in docker
 ```bash
-# After composing deal-app image from running the app part
+# After composing deal-app image from running the app in docker
 $ start deal-app container
 
 $ Click on subcontainer named Backend
 
-$ Go to Terminal tab
+$ Go to the terminal tab
 
 $ Run this command: npm run start
 ```
@@ -51,7 +51,9 @@ $ Run this command: npm run start
 ## 2. Run tests locally
 ```bash
 # After running deal-app locally
-$ Start your mongodb instance
+$ Start your mongodb instance on port 27017
+
 $ Go to deal-app project directory
+
 $ Run this command: npm run start
 ```
