@@ -8,20 +8,28 @@ import {
 } from 'src/lib/stubs/property.stub';
 import { getQueryWithRespectToAdmin } from 'src/lib/utility';
 import { stubAdmin, stubClient } from 'src/lib/stubs/request-roles.stub';
+import { RequestSchema } from 'src/requests/schemas/requests.schema';
+import { getModelToken } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { shouldBeMatchedArr, shouldNotBeMatchedArr } from './stubs/ads.stub';
 
 describe('AdsService', () => {
   let service: AdsService;
   let module: TestingModule;
+  let _id: string, requestModel: Model<Request>;
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
         TestUtils.getTestConfigModule(),
         TestUtils.getTestMongooseModule('ads-service'),
-        TestUtils.getTestMongooseSchemas([{ name: Ad.name, schema: AdSchema }]),
+        TestUtils.getTestMongooseSchemas([
+          { name: Ad.name, schema: AdSchema },
+          { name: Request.name, schema: RequestSchema },
+        ]),
       ],
       providers: [AdsService],
     }).compile();
-
+    requestModel = module.get<Model<Request>>(getModelToken(Request.name));
     service = module.get<AdsService>(AdsService);
   });
 
@@ -51,18 +59,34 @@ describe('AdsService', () => {
   });
 
   describe('when testing ad retrievals', () => {
-    let _id: string;
     it('Should return all documents', async () => {
       const response = await service.getAds();
       expect(response.length).toBeGreaterThan(0);
       _id = response[0]._id.toString();
     });
     it('Should return a single documents', async () => {
-      const response = await service.getSingleAdd({
+      const response = await service.getSingleAd({
         ...getQueryWithRespectToAdmin(stubAdmin()),
         _id,
       });
       expect(response).toBeDefined();
+    });
+  });
+
+  describe('when matching ids with requests', () => {
+    it('Should return all documents with matching criteria', async () => {
+      await requestModel.insertMany([
+        ...shouldBeMatchedArr(),
+        ...shouldNotBeMatchedArr(),
+      ]);
+      const response = await service.getMatchingProperties(_id, 1, 10);
+      expect(response.length).toBe(shouldBeMatchedArr().length);
+    });
+    it('Should not return documents at all', async () => {
+      // sending a user id as a dummy instead of a document id
+      await expect(
+        service.getMatchingProperties(stubUserObjectId().toString(), 1, 10),
+      ).rejects.toThrow();
     });
   });
 });

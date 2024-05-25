@@ -8,7 +8,7 @@ export const stubPropertyCreation = (): PropertyCreationDto => {
   return {
     propertyType: PropertyTypeEnum.APARTMENT,
     area: 'Area 51',
-    price: 1000000,
+    price: 100,
     city: 'Nevada',
     district: 'District 51',
     description: 'Very long and percise description of the property',

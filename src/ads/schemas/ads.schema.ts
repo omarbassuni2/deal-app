@@ -16,7 +16,8 @@ export type AdDocument = HydratedDocument<Ad>;
 
 // - Ads and requests should be linked to users who create them.
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, autoIndex: true })
 export class Ad extends Property {}
 
 export const AdSchema = SchemaFactory.createForClass(Ad);
+AdSchema.index({ area: 1, district: 1 });
