@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RoleEnum, UserLoginDto, UserSignUpDto } from './dto/user.dto';
 import { Public } from 'src/authentication/authentication.guard';
@@ -25,8 +33,11 @@ export class UsersController {
 
   @UseGuards(AuthorizationGuard)
   @Roles(RoleEnum.ADMIN)
-  @Get('/stats')
-  getUserStats() {
-    return this.userService.getUserStats();
+  @Get('stats/')
+  getUserStats(@Query('page') page: string, @Query('limit') limit: string) {
+    return this.userService.getUserStats(
+      parseInt(page, 10) || 1,
+      parseInt(limit, 10) || 10,
+    );
   }
 }

@@ -25,6 +25,6 @@ export class Property {
   @Prop({ default: Date.now })
   refreshedAt: Date;
 
-  @Prop({ type: Types.ObjectId, ref: 'User', index: true })
+  @Prop({ type: Types.ObjectId, ref: 'User', index: true, required: true })
   userId: Types.ObjectId;
 }
