@@ -62,7 +62,7 @@ describe('AdsService', () => {
     it('Should return all documents', async () => {
       const response = await service.getAds();
       expect(response.length).toBeGreaterThan(0);
-      _id = response[0]._id.toString();
+      _id = (response[0] as any)._id.toString();
     });
     it('Should return a single documents', async () => {
       const response = await service.getSingleAd({
@@ -80,7 +80,10 @@ describe('AdsService', () => {
         ...shouldNotBeMatchedArr(),
       ]);
       const response = await service.getMatchingProperties(_id, 1, 10);
-      expect(response.length).toBe(shouldBeMatchedArr().length);
+      expect(response.data.length).toBe(shouldBeMatchedArr().length);
+      expect(response.page).toBeDefined();
+      expect(response.total).toBeDefined();
+      expect(response.limit).toBeDefined();
     });
     it('Should not return documents at all', async () => {
       // sending a user id as a dummy instead of a document id

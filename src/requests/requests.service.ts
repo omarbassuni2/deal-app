@@ -7,7 +7,10 @@ import { RequestCreationDto, RequestUpdateDto } from './dto/requests.dto';
 @Injectable()
 export class RequestsService {
   @InjectModel(Request.name) private requestsModel: Model<Request>;
-  async createRequest(data: RequestCreationDto, userId: Types.ObjectId) {
+  async createRequest(
+    data: RequestCreationDto,
+    userId: Types.ObjectId,
+  ): Promise<Request> {
     return this.requestsModel.create({ ...data, userId });
   }
 
@@ -15,17 +18,17 @@ export class RequestsService {
   async updateRequest(
     data: RequestUpdateDto,
     query: { userId?: Types.ObjectId; _id: string },
-  ) {
+  ): Promise<Request> {
     // - Implement an endpoint for updating property requests (description - area - price).
     return this.requestsModel.findOneAndUpdate(query, data, {
       new: true,
       runValidators: true,
     });
   }
-  async getRequests() {
+  async getRequests(): Promise<Request[]> {
     return this.requestsModel.find();
   }
-  async getSingleRequest(query: { _id: string }) {
-    return this.requestsModel.find(query);
+  async getSingleRequest(query: { _id: string }): Promise<Request> {
+    return this.requestsModel.findOne(query);
   }
 }
