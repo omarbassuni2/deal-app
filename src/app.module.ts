@@ -25,7 +25,7 @@ import { RequestsModule } from './requests/requests.module';
       global: true,
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>(ENV_CONSTANTS.JWT_SECRET),
-        signOptions: { expiresIn: '7d' },
+        signOptions: { expiresIn: '1y' },
       }),
       inject: [ConfigService],
     }),
