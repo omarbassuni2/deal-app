@@ -38,7 +38,7 @@ export class UserLoginDto {
 }
 
 export class UserAuthInfoDto {
-  user: Omit<User, 'password'>;
+  user: UserDto;
   access_token: string;
 }
 

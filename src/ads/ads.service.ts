@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AdCreationDto } from './dto/ads.dto';
+import { AdCreationDto, AdMatchingDto } from './dto/ads.dto';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Ad, AdDocument } from './schemas/ads.schema';
 import { Connection, Model, Types } from 'mongoose';
@@ -8,15 +8,15 @@ import { Connection, Model, Types } from 'mongoose';
 export class AdsService {
   @InjectModel(Ad.name) adsModel: Model<AdDocument>;
   constructor(@InjectConnection() private readonly connection: Connection) {}
-  createAd(data: AdCreationDto, userId: Types.ObjectId) {
+  async createAd(data: AdCreationDto, userId: Types.ObjectId): Promise<Ad> {
     return this.adsModel.create({ ...data, userId });
   }
 
-  getSingleAd(query: { _id: string }) {
+  async getSingleAd(query: { _id: string }): Promise<Ad> {
     return this.adsModel.findOne(query);
   }
 
-  getAds() {
+  async getAds(): Promise<Ad[]> {
     return this.adsModel.find();
   }
 
@@ -26,12 +26,16 @@ export class AdsService {
   //    - example: if ad price is 100 then requests with price 90 to 110 will be matched
   // - Include pagination in the response using MongoDB aggregation with a `single` database call.
   // - Ensure that the matching logic is efficient and can handle a large number of requests and ads (performance considerations).
-  async getMatchingProperties(_id: string, page: number, limit: number) {
+  async getMatchingProperties(
+    _id: string,
+    page: number,
+    limit: number,
+  ): Promise<AdMatchingDto> {
     const ad = await this.adsModel.findById(_id);
     if (!ad) {
       throw new Error('Ad not found');
     }
-    return this.connection
+    const result = await this.connection
       .collection('requests')
       .aggregate([
         {
@@ -46,15 +50,29 @@ export class AdsService {
           },
         },
         {
-          $sort: { refreshedAt: -1, _id: -1 }, // Adding _id: -1 to ensure uniqueness of the sort and avoid duplicates
+          $facet: {
+            metadata: [{ $count: 'total' }],
+            data: [
+              { $sort: { refreshedAt: -1, _id: -1 } },
+              { $skip: (page - 1) * limit },
+              { $limit: limit },
+            ],
+          },
         },
         {
-          $skip: (page - 1) * limit,
-        },
-        {
-          $limit: limit,
+          $project: {
+            data: 1,
+            total: { $arrayElemAt: ['$metadata.total', 0] },
+          },
         },
       ])
       .toArray();
+    const { data, total } = result[0] as any;
+    return {
+      data,
+      total,
+      limit,
+      page,
+    };
   }
 }

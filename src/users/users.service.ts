@@ -1,16 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
-import { Connection, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import * as _ from 'lodash';
 import { JwtService } from '@nestjs/jwt';
-import {
-  RoleEnum,
-  UserAuthInfoDto,
-  UserSignUpDto,
-  UserStatsDto,
-} from './dto/user.dto';
+import { UserAuthInfoDto, UserSignUpDto, UserStatsDto } from './dto/user.dto';
 import { Ad } from 'src/ads/schemas/ads.schema';
 
 @Injectable()
@@ -18,10 +13,7 @@ export class UsersService {
   @InjectModel(User.name) userModel: Model<User>;
   @InjectModel(Ad.name) private readonly adModel: Model<Ad>;
   @InjectModel(Request.name) private readonly requestModel: Model<Request>;
-  constructor(
-    private jwtService: JwtService,
-    @InjectConnection() private readonly connection: Connection,
-  ) {}
+  constructor(private jwtService: JwtService) {}
 
   async signUp(data: UserSignUpDto): Promise<UserAuthInfoDto> {
     return this.userModel.create(data).then((user) => {
