@@ -16,7 +16,8 @@ export type RequestDocument = HydratedDocument<Request>;
 
 // - Ads and requests should be linked to users who create them.
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, autoIndex: true })
 export class Request extends Property {}
 
 export const RequestSchema = SchemaFactory.createForClass(Request);
+RequestSchema.index({ area: 1, district: 1 });

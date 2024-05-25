@@ -7,16 +7,16 @@ export class Property {
   @Prop({ required: true })
   propertyType: PropertyTypeEnum;
 
-  @Prop({ required: true, minlength: 1, maxlength: 64 })
+  @Prop({ required: true, minlength: 1, maxlength: 64, index: true })
   area: string;
 
-  @Prop({ required: true, min: 1 })
+  @Prop({ required: true, min: 1, index: true })
   price: number;
 
   @Prop({ required: true, minlength: 1, maxlength: 64 })
   city: string;
 
-  @Prop({ required: true, minlength: 1, maxlength: 64 })
+  @Prop({ required: true, minlength: 1, maxlength: 64, index: true })
   district: string;
 
   @Prop({ required: true, minlength: 1, maxlength: 1024 })
