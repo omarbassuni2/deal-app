@@ -18,24 +18,21 @@ import { Types } from 'mongoose';
 import { getQueryWithRespectToAdmin } from 'src/lib/utility';
 
 @Controller('ads')
-@UseGuards(AuthorizationGuard)
-@Roles(RoleEnum.AGENT)
 export class AdsController {
   constructor(private adsService: AdsService) {}
   @Post()
+  @UseGuards(AuthorizationGuard)
+  @Roles(RoleEnum.AGENT)
   createAd(@Body() body: AdCreationDto, @Req() req: any) {
     // - Implement an endpoint for creating ads used by agents only.
     return this.adsService.createAd(body, new Types.ObjectId(req.user._id));
   }
   @Get(':_id')
-  getSingleAdd(@Req() req: any, @Param('_id') _id: string) {
-    return this.adsService.getSingleAdd({
-      ...getQueryWithRespectToAdmin(req),
-      _id,
-    });
+  getSingleAdd(@Param('_id') _id: string) {
+    return this.adsService.getSingleAdd({ _id });
   }
   @Get()
-  getAds(@Req() req: any) {
-    return this.adsService.getAds(getQueryWithRespectToAdmin(req));
+  getAds() {
+    return this.adsService.getAds();
   }
 }

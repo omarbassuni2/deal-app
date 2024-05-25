@@ -19,11 +19,11 @@ import { RequestCreationDto, RequestUpdateDto } from './dto/requests.dto';
 import { getQueryWithRespectToAdmin } from 'src/lib/utility';
 
 @Controller('requests')
-@UseGuards(AuthorizationGuard)
-@Roles(RoleEnum.CLIENT)
 export class RequestsController {
   constructor(private requestsService: RequestsService) {}
   @Post()
+  @UseGuards(AuthorizationGuard)
+  @Roles(RoleEnum.CLIENT)
   createRequest(@Body() body: RequestCreationDto, @Req() req: any) {
     // - Implement an endpoint for creating property requests used by clients only.
     return this.requestsService.createRequest(
@@ -46,15 +46,12 @@ export class RequestsController {
   }
 
   @Get()
-  getRequests(@Req() req: any) {
-    return this.requestsService.getRequests(getQueryWithRespectToAdmin(req));
+  getRequests() {
+    return this.requestsService.getRequests();
   }
 
   @Get(':_id')
-  getSingleRequest(@Req() req: any, @Param('_id') _id: string) {
-    return this.requestsService.getSingleRequest({
-      ...getQueryWithRespectToAdmin(req),
-      _id,
-    });
+  getSingleRequest(@Param('_id') _id: string) {
+    return this.requestsService.getSingleRequest({ _id });
   }
 }

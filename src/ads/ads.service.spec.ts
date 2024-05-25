@@ -53,9 +53,7 @@ describe('AdsService', () => {
   describe('when testing ad retrievals', () => {
     let _id: string;
     it('Should return all documents', async () => {
-      const response = await service.getAds(
-        getQueryWithRespectToAdmin(stubAdmin()),
-      );
+      const response = await service.getAds();
       expect(response.length).toBeGreaterThan(0);
       _id = response[0]._id.toString();
     });
@@ -65,12 +63,6 @@ describe('AdsService', () => {
         _id,
       });
       expect(response).toBeDefined();
-    });
-    it('Should not return anything', async () => {
-      const response = await service.getAds(
-        getQueryWithRespectToAdmin(stubClient()),
-      );
-      expect(response.length).toBe(0);
     });
   });
 });

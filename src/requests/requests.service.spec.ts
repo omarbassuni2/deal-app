@@ -59,16 +59,13 @@ describe('RequestsService', () => {
 
   describe('When testing get requests', () => {
     it("Should return user's requests", async () => {
-      const requests = await service.getRequests({
-        userId: stubUserObjectId(),
-      });
+      const requests = await service.getRequests();
       expect(requests.length).toBeGreaterThanOrEqual(1);
       firstDocId = requests[0]._id.toString();
     });
     it('Should return a single user request', async () => {
       const singleRequest = await service.getSingleRequest({
         _id: firstDocId,
-        userId: stubUserObjectId(),
       });
       expect(singleRequest.length).toBe(1);
       expect(singleRequest[0]).toMatchObject(stubPropertyCreation());
