@@ -37,9 +37,8 @@ export class UserLoginDto {
   password: string;
 }
 
-export class UserAuthInfoDto {
-  user: UserDto;
-  access_token: string;
+export class UserAuthInfoDto extends UserDto {
+  bearerToken: string;
 }
 
 // [{

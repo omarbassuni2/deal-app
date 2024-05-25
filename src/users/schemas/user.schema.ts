@@ -28,6 +28,9 @@ export class User {
 
   @Prop({ enum: StatusEnum })
   status: StatusEnum;
+
+  @Prop({ required: true })
+  bearerToken: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

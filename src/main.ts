@@ -8,6 +8,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  // - Provide detailed Swagger documentation for only two endpoints:
+  // - Creating requests
+  // - Getting admin stats
   const options = new DocumentBuilder()
     .setTitle('Deal App example')
     .setDescription('The Deal App API description')

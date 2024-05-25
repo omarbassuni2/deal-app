@@ -68,10 +68,10 @@ describe('UsersService', () => {
   describe('When testing sign in', () => {
     it('Should return user auth info', async () => {
       const user1 = await service.signIn(userStub.phone, userStub.password);
-      expect(user1.user.phone).toBe(userStub.phone);
-      expect(user1.access_token).toBeDefined();
-      expect(typeof user1.access_token).toBe('string');
-      expect(_.get(user1, 'user.password')).toBeUndefined();
+      expect(user1.phone).toBe(userStub.phone);
+      expect(user1.bearerToken).toBeDefined();
+      expect(typeof user1.bearerToken).toBe('string');
+      expect(_.get(user1, 'password')).toBeUndefined();
     });
 
     it('Should throw an error', async () => {

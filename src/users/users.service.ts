@@ -16,9 +16,8 @@ export class UsersService {
   constructor(private jwtService: JwtService) {}
 
   async signUp(data: UserSignUpDto): Promise<UserAuthInfoDto> {
-    return this.userModel.create(data).then((user) => {
-      return this.getUserAuthInfo(user);
-    });
+    const bearerToken = this.jwtService.sign(_.omit(data, ['password']));
+    return this.userModel.create({ ...data, bearerToken });
   }
 
   async signIn(
@@ -29,15 +28,7 @@ export class UsersService {
     if (!user || !bcrypt.compareSync(password, user.password)) {
       throw new UnauthorizedException('phone or password is wrong!');
     }
-    return this.getUserAuthInfo(user);
-  }
-
-  private getUserAuthInfo(user: UserDocument): UserAuthInfoDto {
-    (user as Omit<User, 'password'>) = _.omit(user.toObject(), ['password']);
-    return {
-      user,
-      access_token: this.jwtService.sign(user),
-    };
+    return _.omit(user.toObject(), ['password']);
   }
 
   async getUserStats(page: number, limit: number): Promise<UserStatsDto> {
